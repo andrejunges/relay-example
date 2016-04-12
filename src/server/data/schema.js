@@ -1,60 +1,54 @@
 import {
-  GraphQLObjectType,
   GraphQLInt,
+  GraphQLList,
+  GraphQLObjectType,
+  GraphQLSchema,
   GraphQLString,
-  GraphQLSchema
 } from 'graphql';
 
-import {
-  fromGlobalId,
-  globalIdField,
-  nodeDefinitions
-} from 'graphql-relay';
-
-const example = {
-  id: 1,
-  text: 'Hello World'
+const GROUP = {
+  users: [
+    { "id": "1", "name": "Eduardo", "lastName": "Rost",      "addresses": [{ "id":"1", "street":"rua bento",   "number":"123" }] },
+    { "id": "2", "name": "Renan",   "lastName": "Santos",    "addresses": [{ "id":"2", "street":"rua alfredo", "number":"456" }, { "id": "3", "street":"rua melo", "number": "543" }] },
+    { "id": "3", "name": "Fabiano", "lastName": "Menegussi", "addresses": [{ "id":"4", "street":"rua afonso",  "number":"789" }] },
+    { "id": "4", "name": "Andre",   "lastName": "Junges",    "addresses": [{ "id":"5", "street":"rua cabral",  "number":"0"   }] }
+  ],
 };
 
-/**
- * The first argument defines the way to resolve an ID to its object.
- * The second argument defines the way to resolve a node object to its GraphQL type.
- */
-var { nodeInterface, nodeField } = nodeDefinitions(
-  (globalId) => {
-    let { id, type } = fromGlobalId(globalId);
-    if (type === 'Example')
-      return example;
-    return null;
-  },
-  (obj) => {
-    return exampleType;
+const AddressType = new GraphQLObjectType({
+  name: 'Address',
+  fields: {
+    id: { type: GraphQLString },
+    street: { type: GraphQLString },
+    number: { type: GraphQLInt }
   }
-);
-
-var exampleType = new GraphQLObjectType({
-  name: 'Example',
-  fields: () => ({
-    id: globalIdField('Example'),
-    text: {
-      type: GraphQLString,
-      description: 'Hello World'
-    }
-  }),
-  interfaces: [ nodeInterface ]
 });
 
-var queryType = new GraphQLObjectType({
-  name: 'Query',
+const UserType = new GraphQLObjectType({
+  name: 'User',
   fields: () => ({
-    node: nodeField,
-    example: {
-      type: exampleType,
-      resolve: () => example
-    }
+    id: { type: GraphQLString },
+    name: { type: GraphQLString },
+    lastName: { type: GraphQLString },
+    addresses: { type: new GraphQLList(AddressType) }
   })
 });
 
-export var Schema = new GraphQLSchema({
-  query: queryType
+const GroupType = new GraphQLObjectType({
+  name: 'Group',
+  fields: () => ({
+    users: {type: new GraphQLList(UserType)},
+  }),
+});
+
+export default new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'Query',
+    fields: () => ({
+      group: {
+        type: GroupType,
+        resolve: () => GROUP,
+      },
+    }),
+  }),
 });

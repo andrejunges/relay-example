@@ -1,21 +1,15 @@
+if (module.hot) { module.hot.accept(); }
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Relay from 'react-relay';
-
-import ExampleRoute from './routes/ExampleRoute';
-import Application from './containers/Application';
-
-class Root extends React.Component {
-  render() {
-    return (
-      <Relay.RootContainer
-        Component={ Application }
-        route={ new ExampleRoute() } />
-    );
-  }
-}
+import AppRoute from './routes/AppRoute'
+import Group from './components/Group'
 
 ReactDOM.render(
-  <Root />,
+  <Relay.RootContainer
+    Component={Group}
+    route={new AppRoute()}
+  />,
   document.getElementById('container')
 );

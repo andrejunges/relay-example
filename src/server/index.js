@@ -1,5 +1,7 @@
+if (module.hot) { module.hot.accept(); }
+
 import express from 'express';
-import { Schema } from './data/schema';
+import Schema from './data/schema';
 import graphQLHTTP from 'express-graphql';
 
 const app = express();

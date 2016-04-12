@@ -16,6 +16,7 @@ var frontendConfig = assign({}, defaultConfig, {
   entry: [
     'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
+    'webpack/hot/dev-server',
     './src/frontend/index.js'
   ],
 
@@ -28,7 +29,7 @@ var frontendConfig = assign({}, defaultConfig, {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new HtmlWebpackPlugin({
-      title: 'Skele',
+      title: 'Example Relay',
       filename: 'index.html',
       template: 'src/frontend/index.template.html',
       inject: true
