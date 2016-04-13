@@ -37,8 +37,19 @@ const UserType = new GraphQLObjectType({
 const GroupType = new GraphQLObjectType({
   name: 'Group',
   fields: () => ({
-    users: {type: new GraphQLList(UserType)},
-  }),
+    users: {
+      args: {
+        qtd: { type: GraphQLInt }
+      },
+      type: new GraphQLList(UserType),
+      resolve: (group, {qtd}) => {
+        if (qtd)
+          return group.users.filter(x => x.id <= qtd)
+
+        return group.users
+      }
+    }
+  })
 });
 
 export default new GraphQLSchema({
@@ -47,8 +58,8 @@ export default new GraphQLSchema({
     fields: () => ({
       group: {
         type: GroupType,
-        resolve: () => GROUP,
-      },
-    }),
-  }),
+        resolve: () => GROUP
+      }
+    })
+  })
 });

@@ -1,11 +1,11 @@
-if (module.hot) { module.hot.accept(); }
+//if (module.hot) { module.hot.accept(); }
 
 import express from 'express';
 import Schema from './data/schema';
 import graphQLHTTP from 'express-graphql';
 
 const app = express();
-app.use('/', graphQLHTTP({ schema: Schema, pretty: true }));
+app.use('/', graphQLHTTP({ schema: Schema, pretty: true, graphiql: true }));
 app.listen(8080, (err) => {
   if (err)
     return console.error(err);
